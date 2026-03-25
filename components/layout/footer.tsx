@@ -25,7 +25,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-navy-950 border-t border-white/10">
+    <footer className="bg-black border-t border-gold-500/20">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
@@ -37,6 +37,7 @@ export function Footer() {
                   alt="Zanzi Oakland"
                   fill
                   className="object-contain"
+                  unoptimized
                 />
               </div>
             </Link>
@@ -99,7 +100,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-white/60 text-sm">
                 <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
-                <span>123 Broadway<br />Oakland, CA 94607</span>
+                <span>19 Grand Avenue<br />Oakland, CA 94612</span>
               </li>
               <li>
                 <a
@@ -123,7 +124,7 @@ export function Footer() {
           </div>
         </div>
 
-        <Separator className="my-8" />
+        <Separator className="my-8 bg-gold-500/10" />
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
           <p>&copy; {new Date().getFullYear()} Zanzi Oakland. All rights reserved.</p>

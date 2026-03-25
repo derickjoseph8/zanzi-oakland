@@ -68,6 +68,7 @@ export function AdminSidebar({ userRole }: AdminSidebarProps) {
             alt="Zanzi Oakland"
             fill
             className="object-contain"
+            unoptimized
           />
         </div>
         <div>

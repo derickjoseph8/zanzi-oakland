@@ -7,9 +7,9 @@ export default function CheckoutLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-navy-900">
+    <div className="min-h-screen bg-black">
       {/* Simple header for checkout flow */}
-      <header className="border-b border-white/10 py-4">
+      <header className="border-b border-gold-500/20 py-4">
         <div className="container mx-auto px-4">
           <Link href="/" className="inline-block">
             <div className="relative w-16 h-16">
@@ -18,6 +18,7 @@ export default function CheckoutLayout({
                 alt="Zanzi Oakland"
                 fill
                 className="object-contain"
+                unoptimized
               />
             </div>
           </Link>

@@ -48,6 +48,7 @@ export default function AboutPage() {
                       alt="Zanzi Oakland"
                       fill
                       className="object-contain"
+                      unoptimized
                     />
                   </div>
                 </div>
@@ -81,7 +82,7 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="py-16 bg-navy-800/50">
+      <section className="py-16 bg-black/50">
         <div className="container mx-auto px-4">
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-white text-center mb-12">
             What We Stand For
@@ -213,7 +214,7 @@ export default function AboutPage() {
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-navy-800/50">
+      <section className="py-16 bg-black/50">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[

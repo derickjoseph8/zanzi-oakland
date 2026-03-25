@@ -183,6 +183,7 @@ export default function HomePage() {
             >
               <Image
                 src="/logo.gif"
+                unoptimized
                 alt="Zanzi Oakland"
                 fill
                 className="object-contain"
@@ -403,6 +404,7 @@ export default function HomePage() {
                   <div className="text-center">
                     <Image
                       src="/logo.gif"
+                unoptimized
                       alt="Zanzi VIP"
                       width={200}
                       height={200}
