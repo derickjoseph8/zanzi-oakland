@@ -14,7 +14,7 @@ export default function CheckoutLayout({
           <Link href="/" className="inline-block">
             <div className="relative w-16 h-16">
               <Image
-                src="/logo.gif"
+                src="/logo.png"
                 alt="Zanzi Oakland"
                 fill
                 className="object-contain"

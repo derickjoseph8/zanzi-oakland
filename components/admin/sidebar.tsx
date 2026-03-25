@@ -64,7 +64,7 @@ export function AdminSidebar({ userRole }: AdminSidebarProps) {
       <div className="flex items-center gap-2 px-6 py-4 border-b border-white/10">
         <div className="relative w-10 h-10">
           <Image
-            src="/logo.gif"
+            src="/logo.png"
             alt="Zanzi Oakland"
             fill
             className="object-contain"

@@ -182,7 +182,7 @@ export default function HomePage() {
               className="relative w-32 h-32 md:w-40 md:h-40 mx-auto mb-8"
             >
               <Image
-                src="/logo.gif"
+                src="/logo.png"
                 unoptimized
                 alt="Zanzi Oakland"
                 fill
@@ -403,7 +403,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <Image
-                      src="/logo.gif"
+                      src="/logo.png"
                 unoptimized
                       alt="Zanzi VIP"
                       width={200}

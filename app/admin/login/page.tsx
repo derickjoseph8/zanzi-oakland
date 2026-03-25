@@ -57,7 +57,7 @@ export default function LoginPage() {
         <CardHeader className="text-center space-y-4">
           <div className="mx-auto w-32 h-32 relative">
             <Image
-              src="/logo.gif"
+              src="/logo.png"
               alt="Zanzi Oakland"
               fill
               className="object-contain"

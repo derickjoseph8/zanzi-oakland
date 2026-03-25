@@ -33,7 +33,7 @@ export function Footer() {
             <Link href="/" className="inline-block">
               <div className="relative w-24 h-24">
                 <Image
-                  src="/logo.gif"
+                  src="/logo.png"
                   alt="Zanzi Oakland"
                   fill
                   className="object-contain"

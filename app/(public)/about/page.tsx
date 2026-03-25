@@ -44,7 +44,7 @@ export default function AboutPage() {
                 <div className="text-center">
                   <div className="relative w-40 h-40 mx-auto">
                     <Image
-                      src="/logo.gif"
+                      src="/logo.png"
                       alt="Zanzi Oakland"
                       fill
                       className="object-contain"

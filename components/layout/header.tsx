@@ -53,7 +53,7 @@ export function Header() {
             <Link href="/" className="relative z-10">
               <div className="relative w-20 h-20 md:w-24 md:h-24">
                 <Image
-                  src="/logo.gif"
+                  src="/logo.png"
                   alt="Zanzi Oakland"
                   fill
                   className="object-contain"
