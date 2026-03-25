@@ -2,81 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 235, 45%, 8%;
-    --foreground: 0, 0%, 100%;
-
-    --card: 235, 45%, 12%;
-    --card-foreground: 0, 0%, 100%;
-
-    --popover: 235, 45%, 12%;
-    --popover-foreground: 0, 0%, 100%;
-
-    --primary: 43, 73%, 52%;
-    --primary-foreground: 235, 45%, 8%;
-
-    --secondary: 276, 63%, 46%;
-    --secondary-foreground: 0, 0%, 100%;
-
-    --muted: 235, 20%, 20%;
-    --muted-foreground: 0, 0%, 63%;
-
-    --accent: 276, 63%, 46%;
-    --accent-foreground: 0, 0%, 100%;
-
-    --destructive: 0, 84%, 60%;
-    --destructive-foreground: 0, 0%, 100%;
-
-    --border: 0, 0%, 100%, 0.1;
-    --input: 0, 0%, 100%, 0.1;
-    --ring: 43, 73%, 52%;
-
-    --radius: 0.5rem;
-  }
+:root {
+  --background: 235 45% 8%;
+  --foreground: 0 0% 100%;
+  --card: 235 45% 12%;
+  --card-foreground: 0 0% 100%;
+  --popover: 235 45% 12%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 43 73% 52%;
+  --primary-foreground: 235 45% 8%;
+  --secondary: 276 63% 46%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 235 20% 20%;
+  --muted-foreground: 0 0% 63%;
+  --accent: 276 63% 46%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 100% / 0.1;
+  --input: 0 0% 100% / 0.1;
+  --ring: 43 73% 52%;
+  --radius: 0.5rem;
 }
 
-/* Fallback dark background */
 html, body {
-  background-color: #12121f !important;
-  color: #ffffff !important;
+  background-color: hsl(235 45% 8%) !important;
+  color: hsl(0 0% 100%) !important;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  scroll-behavior: smooth;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
+* {
+  border-color: hsl(var(--border));
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.text-balance {
+  text-wrap: balance;
+}
 
-  .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
-  }
+.glass {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  .glass-gold {
-    @apply bg-gold-500/5 backdrop-blur-md border border-gold-500/20;
-  }
+.glass-gold {
+  background-color: rgba(212, 175, 55, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
 
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-400 to-gold-600;
-  }
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #e5b83e, #c18a1f);
+}
 
-  .gradient-text-purple {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-600;
-  }
+.gradient-text-purple {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #c182ff, #9333ea);
 }
 
 /* Custom scrollbar */
