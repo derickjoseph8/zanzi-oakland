@@ -41,7 +41,7 @@ export default function GalleryPage() {
     }
   };
 
-  const categories = ["all", ...new Set(images.map((img) => img.category).filter(Boolean))];
+  const categories = ["all", ...Array.from(new Set(images.map((img) => img.category).filter(Boolean)))] as string[];
 
   const filteredImages =
     activeCategory === "all"
