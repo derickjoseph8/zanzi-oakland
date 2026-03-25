@@ -58,6 +58,8 @@ export const permissions = {
 
   // Subscribers - Admin and Manager
   "subscribers.view": [Role.ADMIN, Role.MANAGER],
+  "subscribers.edit": [Role.ADMIN, Role.MANAGER],
+  "subscribers.delete": [Role.ADMIN],
   "subscribers.export": [Role.ADMIN, Role.MANAGER],
 } as const;
 
