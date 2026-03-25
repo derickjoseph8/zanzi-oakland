@@ -92,7 +92,7 @@ export default async function EventsPage() {
                               className="object-cover grayscale"
                             />
                           ) : (
-                            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/50 to-gold-600/50" />
+                            <div className="absolute inset-0 bg-gradient-to-br from-black to-gold-600/50" />
                           )}
                           <div className="absolute inset-0 bg-black/40" />
                           <Badge variant="secondary" className="absolute top-4 left-4">
@@ -166,7 +166,7 @@ function EventCard({ event, featured = false }: { event: any; featured?: boolean
                   className="object-cover"
                 />
               ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-gold-600" />
+                <div className="absolute inset-0 bg-gradient-to-br from-black to-gold-600" />
               )}
               {event.isFeatured && (
                 <Badge className="absolute top-4 left-4">Featured</Badge>
@@ -251,7 +251,7 @@ function EventCard({ event, featured = false }: { event: any; featured?: boolean
                 className="object-cover"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-gold-600" />
+              <div className="absolute inset-0 bg-gradient-to-br from-black to-gold-600" />
             )}
           </div>
           <CardContent className="p-6 flex-1">

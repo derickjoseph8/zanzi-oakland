@@ -75,7 +75,7 @@ export default async function EventPage({ params }: EventPageProps) {
                 priority
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-gold-600" />
+              <div className="absolute inset-0 bg-gradient-to-br from-black to-gold-600" />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-transparent to-transparent" />
 

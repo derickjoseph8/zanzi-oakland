@@ -197,7 +197,7 @@ export default function StaffPage() {
       case "ADMIN":
         return <Badge className="bg-red-500/20 text-red-500">Admin</Badge>;
       case "MANAGER":
-        return <Badge className="bg-purple-500/20 text-purple-500">Manager</Badge>;
+        return <Badge className="bg-gold-500/20 text-gold-500">Manager</Badge>;
       default:
         return <Badge variant="outline">Staff</Badge>;
     }
@@ -245,7 +245,7 @@ export default function StaffPage() {
           <p className="text-2xl font-bold text-white">{stats.admins}</p>
         </Card>
         <Card glass className="p-4">
-          <p className="text-sm text-purple-500">Managers</p>
+          <p className="text-sm text-gold-500">Managers</p>
           <p className="text-2xl font-bold text-white">{stats.managers}</p>
         </Card>
         <Card glass className="p-4">

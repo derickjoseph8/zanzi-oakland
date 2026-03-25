@@ -51,7 +51,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-navy-900 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-navy-900 to-navy-900" />
+      <div className="absolute inset-0 bg-gradient-to-br from-gold-900/20 via-black to-black" />
 
       <Card className="w-full max-w-md relative z-10 glass border-white/10">
         <CardHeader className="text-center space-y-4">

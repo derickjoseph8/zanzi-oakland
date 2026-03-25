@@ -42,7 +42,7 @@ export default async function BottleServicePage() {
     <div className="pt-24 pb-16">
       {/* Hero */}
       <section className="py-16 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
           <Badge variant="outline" className="mb-4">
             <Wine className="h-3 w-3 mr-1" />

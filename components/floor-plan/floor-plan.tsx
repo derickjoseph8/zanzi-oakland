@@ -38,7 +38,7 @@ export function FloorPlan({
       }
       // Section-based colors
       const colors: Record<string, string> = {
-        VIP: "fill-purple-600/50 stroke-purple-400",
+        VIP: "fill-gold-600/50 stroke-gold-400",
         "Main Floor": "fill-blue-600/50 stroke-blue-400",
         Lounge: "fill-green-600/50 stroke-green-400",
       };
@@ -144,7 +144,7 @@ export function FloorPlan({
             <div
               className={cn(
                 "w-4 h-4 rounded",
-                section.name === "VIP" && "bg-purple-600",
+                section.name === "VIP" && "bg-gold-600",
                 section.name === "Main Floor" && "bg-blue-600",
                 section.name === "Lounge" && "bg-green-600"
               )}
@@ -208,15 +208,15 @@ export function FloorPlan({
             width={100}
             height={40}
             rx={4}
-            fill="rgba(123, 44, 191, 0.3)"
-            stroke="rgba(123, 44, 191, 0.5)"
+            fill="rgba(212, 175, 55, 0.3)"
+            stroke="rgba(212, 175, 55, 0.5)"
             strokeWidth={2}
           />
           <text
             x={350}
             y={445}
             textAnchor="middle"
-            fill="rgba(123, 44, 191, 0.7)"
+            fill="rgba(212, 175, 55, 0.7)"
             fontSize="12"
             fontWeight="500"
           >

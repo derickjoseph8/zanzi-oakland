@@ -308,7 +308,7 @@ function EventGrid({
                 className={`object-cover ${isPast ? "grayscale opacity-70" : ""}`}
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-gold-600" />
+              <div className="absolute inset-0 bg-gradient-to-br from-black to-gold-600" />
             )}
             <div className="absolute top-2 left-2 flex gap-2">
               {!event.isPublished && (

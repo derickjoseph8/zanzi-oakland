@@ -182,8 +182,8 @@ export default async function SalesPage() {
                   {formatCurrency(stats.thisMonth.ticketRevenue)}
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
-                <Ticket className="h-6 w-6 text-purple-500" />
+              <div className="w-12 h-12 rounded-full bg-gold-500/20 flex items-center justify-center">
+                <Ticket className="h-6 w-6 text-gold-500" />
               </div>
             </div>
             <p className="text-sm text-white/50 mt-3">
