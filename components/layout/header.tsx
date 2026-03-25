@@ -41,10 +41,10 @@ export function Header() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
           isScrolled
-            ? "bg-navy-900/95 backdrop-blur-md border-b border-white/10 py-2"
-            : "bg-transparent py-4"
+            ? "bg-black/90 backdrop-blur-xl border-b border-gold-500/10 py-2 shadow-lg shadow-black/50"
+            : "bg-gradient-to-b from-black/50 to-transparent py-4"
         )}
       >
         <div className="container mx-auto px-4">
@@ -78,7 +78,7 @@ export function Header() {
                   {item.name}
                 </Link>
               ))}
-              <Button asChild size="sm">
+              <Button asChild size="sm" className="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-black font-semibold">
                 <Link href="/reservations">Reserve Now</Link>
               </Button>
             </div>
@@ -116,7 +116,7 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 h-full w-80 max-w-[calc(100%-4rem)] bg-navy-800 border-l border-white/10 p-6 pt-24"
+              className="absolute right-0 top-0 h-full w-80 max-w-[calc(100%-4rem)] bg-black border-l border-gold-500/20 p-6 pt-24"
             >
               <nav className="flex flex-col gap-4">
                 {navigation.map((item) => (
