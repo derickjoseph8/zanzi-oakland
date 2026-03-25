@@ -26,6 +26,12 @@ export function FloorPlan({
 }: FloorPlanProps) {
   const [hoveredTable, setHoveredTable] = useState<TableWithSection | null>(null);
 
+  // Helper to find section name for a table
+  const getSectionForTable = useCallback((table: Table | null): Section | undefined => {
+    if (!table) return undefined;
+    return sections.find(s => s.id === table.sectionId);
+  }, [sections]);
+
   const getSectionColor = (sectionName: string) => {
     const colors: Record<string, { fill: string; stroke: string; glow: string }> = {
       Jungle: { fill: "#22c55e", stroke: "#4ade80", glow: "0 0 30px rgba(34, 197, 94, 0.5)" },
@@ -476,7 +482,7 @@ export function FloorPlan({
                       )}
                     </h4>
                     <p className="text-sm text-gold-500/80">
-                      {(hoveredTable || selectedTable)?.section?.name} Section
+                      {getSectionForTable(hoveredTable || selectedTable)?.name} Section
                     </p>
                   </div>
                   {selectedTable && (
