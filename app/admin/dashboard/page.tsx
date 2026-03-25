@@ -57,8 +57,7 @@ async function getDashboardStats() {
         createdAt: { gte: thisMonth },
         status: "VALID",
       },
-      _sum: { quantity: true },
-      _sum: { totalPrice: true },
+      _sum: { quantity: true, totalPrice: true },
     }),
     // Recent reservations
     db.reservation.findMany({

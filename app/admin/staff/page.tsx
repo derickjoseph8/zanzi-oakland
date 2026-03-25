@@ -58,11 +58,16 @@ export default function StaffPage() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    password: string;
+    role: "ADMIN" | "MANAGER" | "STAFF";
+  }>({
     name: "",
     email: "",
     password: "",
-    role: "STAFF" as const,
+    role: "STAFF",
   });
 
   useEffect(() => {
