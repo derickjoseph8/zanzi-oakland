@@ -81,6 +81,16 @@ export default function TicketScannerPage() {
   };
 
   const startCamera = async () => {
+    // Check if we're on HTTPS (required for camera access)
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+      toast({
+        title: "HTTPS Required",
+        description: "Camera access requires HTTPS. Please use manual code entry or set up SSL.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } }
@@ -98,7 +108,7 @@ export default function TicketScannerPage() {
       console.error("Camera error:", err);
       toast({
         title: "Camera Error",
-        description: "Unable to access camera. Please check permissions.",
+        description: "Unable to access camera. Please check permissions or use manual entry.",
         variant: "destructive",
       });
     }
@@ -404,10 +414,24 @@ export default function TicketScannerPage() {
                 </AnimatePresence>
               </div>
             ) : (
-              <div className="aspect-video bg-black/50 rounded-lg flex flex-col items-center justify-center">
-                <Camera className="h-16 w-16 text-white/20 mb-4" />
-                <p className="text-white/40">Camera not active</p>
-                <p className="text-white/30 text-sm mt-1">Click &quot;Start Camera&quot; to begin scanning</p>
+              <div className="aspect-video bg-black/50 rounded-lg flex flex-col items-center justify-center p-6">
+                {typeof window !== 'undefined' && window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' ? (
+                  <>
+                    <div className="w-16 h-16 rounded-full bg-yellow-500/20 flex items-center justify-center mb-4">
+                      <AlertTriangle className="h-8 w-8 text-yellow-500" />
+                    </div>
+                    <p className="text-yellow-500 font-medium text-center">HTTPS Required for Camera</p>
+                    <p className="text-white/40 text-sm mt-2 text-center max-w-md">
+                      Camera access requires a secure connection (HTTPS). Use the manual entry below or set up SSL for camera scanning.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Camera className="h-16 w-16 text-white/20 mb-4" />
+                    <p className="text-white/40">Camera not active</p>
+                    <p className="text-white/30 text-sm mt-1">Click &quot;Start Camera&quot; to begin scanning</p>
+                  </>
+                )}
               </div>
             )}
           </div>
