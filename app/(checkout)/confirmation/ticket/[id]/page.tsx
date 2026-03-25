@@ -83,7 +83,7 @@ export default async function TicketConfirmationPage({
 
             <div className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-gold-500" />
-              <p className="text-white">Zanzi Oakland, 123 Broadway</p>
+              <p className="text-white">Zanzi Oakland, 19 Grand Avenue</p>
             </div>
 
             <div className="flex items-center gap-3">

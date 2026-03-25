@@ -140,7 +140,7 @@ export default async function EventPage({ params }: EventPageProps) {
                 </div>
                 <div>
                   <p className="font-medium">Zanzi Oakland</p>
-                  <p className="text-sm text-white/50">123 Broadway, Oakland, CA 94607</p>
+                  <p className="text-sm text-white/50">19 Grand Avenue, Oakland, CA 94612</p>
                 </div>
               </div>
 

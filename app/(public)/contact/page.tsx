@@ -101,8 +101,8 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold text-white mb-1">Address</h3>
                       <p className="text-white/60">
-                        123 Broadway<br />
-                        Oakland, CA 94607
+                        19 Grand Avenue<br />
+                        Oakland, CA 94612
                       </p>
                     </div>
                   </div>

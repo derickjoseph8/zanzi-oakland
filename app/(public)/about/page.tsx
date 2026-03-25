@@ -139,8 +139,8 @@ export default function AboutPage() {
                     Location
                   </h3>
                   <p className="text-white/70">
-                    123 Broadway<br />
-                    Oakland, CA 94607
+                    19 Grand Avenue<br />
+                    Oakland, CA 94612
                   </p>
                 </div>
               </div>
