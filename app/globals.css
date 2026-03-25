@@ -12,12 +12,12 @@
     --popover-foreground: 0 0% 100%;
     --primary: 43 73% 52%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 276 63% 46%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 43 73% 45%;
+    --secondary-foreground: 0 0% 0%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 63%;
-    --accent: 276 63% 46%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 43 73% 45%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 100% / 0.1;
@@ -70,11 +70,11 @@ html {
   background-image: linear-gradient(to right, #e5b83e, #c18a1f);
 }
 
-.gradient-text-purple {
+.gradient-text-gold {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  background-image: linear-gradient(to right, #c182ff, #9333ea);
+  background-image: linear-gradient(to right, #e5b83e, #c18a1f);
 }
 
 /* Custom scrollbar */

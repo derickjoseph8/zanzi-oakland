@@ -16,7 +16,7 @@ export default function AboutPage() {
     <div className="pt-24 pb-16">
       {/* Hero */}
       <section className="py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="outline" className="mb-4">
@@ -39,7 +39,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-gold-600" />
+              <div className="absolute inset-0 bg-gradient-to-br from-gold-600 to-gold-700" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
                   <div className="relative w-40 h-40 mx-auto">

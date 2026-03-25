@@ -154,7 +154,7 @@ export default function HomePage() {
           style={{ scale: heroScale }}
           className="absolute inset-0"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 via-black to-black" />
+          <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-black" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-900/20 via-transparent to-transparent" />
         </motion.div>
 
@@ -289,7 +289,7 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section ref={featuresRef} className="py-24 bg-gradient-to-b from-black to-black/95 relative">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gold-900/5 via-transparent to-transparent" />
 
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -320,7 +320,7 @@ export default function HomePage() {
               >
                 <Card className="bg-white/5 border-white/10 backdrop-blur-xl hover:bg-white/10 transition-all duration-500 hover:border-gold-500/30 group h-full">
                   <CardContent className="p-8 text-center">
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gold-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gold-500/20 to-gold-600/20 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
                       <feature.icon className="h-10 w-10 text-gold-500" />
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-4">
@@ -337,7 +337,7 @@ export default function HomePage() {
 
       {/* VIP Section with Parallax */}
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/30 via-black to-gold-900/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black to-gold-900/10" />
         <div className="absolute inset-0 bg-[url('/images/vip-bg.jpg')] bg-cover bg-center opacity-10" />
 
         {/* Animated border lines */}
@@ -399,7 +399,7 @@ export default function HomePage() {
               className="relative"
             >
               <div className="relative aspect-square rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-gold-600/30 to-purple-600/30" />
+                <div className="absolute inset-0 bg-gradient-to-br from-gold-600/30 to-gold-700/30" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <Image
@@ -426,7 +426,7 @@ export default function HomePage() {
 
       {/* Testimonials */}
       <section className="py-24 bg-black relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-gold-900/5 via-transparent to-transparent" />
 
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -582,7 +582,7 @@ export default function HomePage() {
 
       {/* Newsletter CTA */}
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-gold-900/20 via-purple-900/20 to-gold-900/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-gold-900/20 via-black to-gold-900/20" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent" />
 
         <div className="container mx-auto px-4 relative z-10">
@@ -618,7 +618,7 @@ export default function HomePage() {
 
       {/* Final CTA */}
       <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
         <ParticlesBackground />
 
         <div className="container mx-auto px-4 relative z-10 text-center">
