@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, useRef, useCallback } from "react";
-import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Calendar,
@@ -14,48 +14,14 @@ import {
   Star,
   MapPin,
   Clock,
-  Play,
-  Instagram,
   ChevronLeft,
   ChevronRight,
-  Volume2,
-  VolumeX,
+  Play,
+  Pause,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
-// Cursor trail effect
-function CursorGlow() {
-  const cursorX = useMotionValue(0);
-  const cursorY = useMotionValue(0);
-  const springConfig = { damping: 25, stiffness: 200 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [cursorX, cursorY]);
-
-  return (
-    <motion.div
-      className="fixed pointer-events-none z-50 hidden md:block"
-      style={{
-        x: cursorXSpring,
-        y: cursorYSpring,
-        translateX: "-50%",
-        translateY: "-50%",
-      }}
-    >
-      <div className="w-96 h-96 rounded-full bg-gradient-radial from-gold-500/10 via-gold-500/5 to-transparent blur-3xl" />
-    </motion.div>
-  );
-}
 
 // Animated counter component
 function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
@@ -91,112 +57,48 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
   );
 }
 
-// Floating particles background
-function ParticlesBackground({ density = 30 }: { density?: number }) {
+// Marquee text component
+function MarqueeText({ text, speed = 30 }: { text: string; speed?: number }) {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(density)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            width: Math.random() * 4 + 1,
-            height: Math.random() * 4 + 1,
-            background: `rgba(212, 175, 55, ${Math.random() * 0.5 + 0.1})`,
-          }}
-          initial={{
-            x: `${Math.random() * 100}%`,
-            y: "110%",
-            opacity: 0,
-          }}
-          animate={{
-            y: "-10%",
-            opacity: [0, 1, 1, 0],
-          }}
-          transition={{
-            duration: Math.random() * 15 + 10,
-            repeat: Infinity,
-            delay: Math.random() * 10,
-            ease: "linear",
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-// Text reveal animation
-function TextReveal({ children, delay = 0 }: { children: string; delay?: number }) {
-  return (
-    <span className="overflow-hidden inline-block">
-      <motion.span
-        className="inline-block"
-        initial={{ y: "100%" }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, delay, ease: [0.33, 1, 0.68, 1] }}
-      >
-        {children}
-      </motion.span>
-    </span>
-  );
-}
-
-// Glowing orb decoration
-function GlowingOrb({ className, color = "gold" }: { className: string; color?: "gold" | "white" }) {
-  return (
-    <div className={`absolute pointer-events-none ${className}`}>
+    <div className="overflow-hidden whitespace-nowrap">
       <motion.div
-        className={`w-64 h-64 rounded-full blur-3xl ${
-          color === "gold" ? "bg-gold-500/20" : "bg-white/10"
-        }`}
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+        className="inline-block"
+        animate={{ x: [0, -1000] }}
+        transition={{ duration: speed, repeat: Infinity, ease: "linear" }}
+      >
+        {[...Array(10)].map((_, i) => (
+          <span key={i} className="inline-block mx-8 text-gold-500/20 text-2xl font-bold uppercase tracking-[0.3em]">
+            {text} <span className="text-gold-500/40">★</span>
+          </span>
+        ))}
+      </motion.div>
     </div>
-  );
-}
-
-// Animated line
-function AnimatedLine({ direction = "horizontal" }: { direction?: "horizontal" | "vertical" }) {
-  return (
-    <motion.div
-      className={`absolute ${
-        direction === "horizontal" ? "h-px left-0 right-0" : "w-px top-0 bottom-0"
-      }`}
-      style={{
-        background: direction === "horizontal"
-          ? "linear-gradient(90deg, transparent, rgba(212,175,55,0.5), transparent)"
-          : "linear-gradient(180deg, transparent, rgba(212,175,55,0.3), transparent)",
-      }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 2 }}
-    />
   );
 }
 
 export default function HomePage() {
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
-  const heroScale = useTransform(scrollY, [0, 600], [1, 1.15]);
-  const heroY = useTransform(scrollY, [0, 600], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const textY = useTransform(scrollY, [0, 500], [0, 100]);
 
   const featuresRef = useRef(null);
   const featuresInView = useInView(featuresRef, { once: true, margin: "-100px" });
 
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    setIsLoaded(true);
-    // Auto-rotate testimonials
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20,
+      });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 5000);
@@ -235,483 +137,293 @@ export default function HomePage() {
     {
       icon: Music,
       title: "World Music",
-      description: "Afrobeats, Latin, Hip-Hop, R&B, House and more. Our DJs spin sounds from every corner of the globe.",
+      description: "Afrobeats, Latin, Hip-Hop, R&B, House and more.",
     },
     {
       icon: Wine,
       title: "Premium Service",
-      description: "VIP tables, top-shelf spirits, and dedicated hosts. Experience luxury nightlife at its finest.",
+      description: "VIP tables, top-shelf spirits, dedicated hosts.",
     },
     {
       icon: Users,
       title: "Inclusive Space",
-      description: "A celebration of diversity where everyone belongs. All cultures, all backgrounds, one dance floor.",
+      description: "All cultures, all backgrounds, one dance floor.",
     },
   ];
 
   return (
     <>
-      <CursorGlow />
-
-      {/* Loading Screen */}
-      <AnimatePresence>
-        {!isLoaded && (
+      {/* Hero Section - Full Impact */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0">
           <motion.div
-            className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Image src="/logo.png" unoptimized alt="Zanzi" width={120} height={120} />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Hero Section with Video/Animation */}
-      <motion.section
-        style={{ opacity: heroOpacity }}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      >
-        {/* Animated Background Layers */}
-        <motion.div style={{ scale: heroScale, y: heroY }} className="absolute inset-0">
-          {/* Base gradient */}
-          <div className="absolute inset-0 bg-black" />
-
-          {/* Animated gradient orbs */}
-          <GlowingOrb className="-top-32 -left-32" />
-          <GlowingOrb className="-bottom-32 -right-32" />
-          <GlowingOrb className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" color="white" />
-
-          {/* Noise texture overlay */}
-          <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNhKSIvPjwvc3ZnPg==')]" />
-        </motion.div>
-
-        <ParticlesBackground density={40} />
-
-        {/* Animated Lines */}
-        <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            className="absolute top-0 left-[20%] w-px h-full"
+            className="absolute inset-0"
             style={{
-              background: "linear-gradient(180deg, transparent, rgba(212,175,55,0.15), transparent)",
+              background: `radial-gradient(circle at ${50 + mousePosition.x}% ${50 + mousePosition.y}%, rgba(212,175,55,0.15) 0%, transparent 50%)`,
             }}
-            initial={{ scaleY: 0, originY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ duration: 2, delay: 0.5 }}
           />
-          <motion.div
-            className="absolute top-0 right-[20%] w-px h-full"
-            style={{
-              background: "linear-gradient(180deg, transparent, rgba(212,175,55,0.15), transparent)",
-            }}
-            initial={{ scaleY: 0, originY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ duration: 2, delay: 0.7 }}
-          />
-          <motion.div
-            className="absolute top-1/3 left-0 right-0 h-px"
-            style={{
-              background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent)",
-            }}
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 2, delay: 1 }}
-          />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-gold-900/20 via-transparent to-transparent" />
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 container mx-auto px-4 text-center">
+        {/* Floating particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(50)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-gold-500 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0, 1, 0],
+                scale: [0, 1, 0],
+              }}
+              transition={{
+                duration: Math.random() * 3 + 2,
+                repeat: Infinity,
+                delay: Math.random() * 5,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Decorative lines */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold-500/20 to-transparent" />
+          <div className="absolute top-3/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold-500/10 to-transparent" />
+          <div className="absolute top-0 left-1/4 h-full w-px bg-gradient-to-b from-transparent via-gold-500/10 to-transparent" />
+          <div className="absolute top-0 right-1/4 h-full w-px bg-gradient-to-b from-transparent via-gold-500/10 to-transparent" />
+        </div>
+
+        {/* Main content */}
+        <motion.div
+          style={{ opacity: heroOpacity, y: textY }}
+          className="relative z-10 container mx-auto px-4 text-center"
+        >
+          {/* Small badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Badge variant="outline" className="mb-8 border-gold-500/30 text-gold-400 px-4 py-1.5">
+              <Sparkles className="h-3 w-3 mr-2" />
+              Oakland&apos;s Premier International Nightclub
+            </Badge>
+          </motion.div>
+
+          {/* Giant Typography */}
+          <div className="overflow-hidden">
+            <motion.h1
+              initial={{ y: 200 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+              className="font-serif text-[15vw] md:text-[12vw] lg:text-[10vw] font-black leading-[0.85] tracking-tighter"
+            >
+              <span className="block text-white">ZANZI</span>
+            </motion.h1>
+          </div>
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="max-w-6xl mx-auto"
+            transition={{ delay: 0.5, duration: 1 }}
+            className="mt-4 mb-12"
           >
-            {/* Logo with glow */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5, rotateY: 180 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ duration: 1.2, type: "spring", bounce: 0.3 }}
-              className="relative w-36 h-36 md:w-48 md:h-48 mx-auto mb-8"
-            >
-              <div className="absolute inset-0 bg-gold-500/20 rounded-full blur-3xl animate-pulse" />
-              <Image
-                src="/logo.png"
-                unoptimized
-                alt="Zanzi Oakland"
-                fill
-                className="object-contain relative z-10"
-                priority
-              />
-            </motion.div>
-
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <Badge variant="outline" className="mb-8 border-gold-500/50 text-gold-400 px-6 py-2 text-sm backdrop-blur-sm">
-                <motion.span
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                  className="inline-block mr-2"
-                >
-                  <Sparkles className="h-4 w-4" />
-                </motion.span>
-                Oakland&apos;s Premier International Nightclub
-              </Badge>
-            </motion.div>
-
-            {/* Main heading with stagger animation */}
-            <div className="overflow-hidden mb-8">
-              <motion.h1
-                className="font-serif text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.9]"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.7 }}
-              >
-                <motion.span
-                  className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 bg-[length:200%_auto]"
-                  animate={{ backgroundPosition: ["0%", "200%"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                  initial={{ y: 100, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                >
-                  Experience
-                </motion.span>
-                <br />
-                <motion.span
-                  className="inline-block text-white"
-                  initial={{ y: 100, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.9 }}
-                >
-                  The Night
-                </motion.span>
-              </motion.h1>
-            </div>
-
-            {/* Tagline with typing effect */}
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 }}
-              className="text-lg md:text-2xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed font-light"
-            >
-              Where diverse cultures unite under one roof. World-class DJs, premium bottle service,
-              and an atmosphere unlike any other.
-            </motion.p>
-
-            {/* CTA Buttons with hover effects */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.3 }}
-              className="flex flex-col sm:flex-row gap-6 justify-center"
-            >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  asChild
-                  size="xl"
-                  className="relative overflow-hidden bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 bg-[length:200%_auto] hover:bg-right text-black font-bold px-10 py-7 text-lg rounded-full shadow-lg shadow-gold-500/30 transition-all duration-500 group"
-                >
-                  <Link href="/reservations">
-                    <span className="relative z-10 flex items-center">
-                      Reserve a Table
-                      <motion.span
-                        className="ml-2"
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                      >
-                        <ArrowRight className="h-5 w-5" />
-                      </motion.span>
-                    </span>
-                  </Link>
-                </Button>
-              </motion.div>
-
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  asChild
-                  size="xl"
-                  variant="outline"
-                  className="border-2 border-white/30 hover:border-gold-500/50 hover:bg-gold-500/10 px-10 py-7 text-lg rounded-full backdrop-blur-sm transition-all duration-300"
-                >
-                  <Link href="/events">
-                    <Calendar className="mr-2 h-5 w-5" />
-                    View Events
-                  </Link>
-                </Button>
-              </motion.div>
-            </motion.div>
+            <span className="text-2xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-gold-500 to-gold-400 font-light tracking-[0.3em] uppercase">
+              Oakland
+            </span>
           </motion.div>
 
-          {/* Animated Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
+          {/* Tagline */}
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5 }}
-            className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto"
+            transition={{ delay: 0.8 }}
+            className="text-xl md:text-2xl text-white/60 mb-12 max-w-2xl mx-auto font-light"
+          >
+            Where cultures collide and nights come alive
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Button
+              asChild
+              size="lg"
+              className="bg-gold-500 hover:bg-gold-600 text-black font-bold px-10 py-6 text-lg rounded-none group"
+            >
+              <Link href="/reservations">
+                RESERVE A TABLE
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white/20 hover:bg-white/5 px-10 py-6 text-lg rounded-none"
+            >
+              <Link href="/events">
+                <Calendar className="mr-2 h-5 w-5" />
+                VIEW EVENTS
+              </Link>
+            </Button>
+          </motion.div>
+
+          {/* Stats row */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="mt-24 flex flex-wrap justify-center gap-12 md:gap-20"
           >
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.6 + i * 0.1 }}
-                whileHover={{ scale: 1.1, y: -5 }}
-                className="relative group"
+                transition={{ delay: 1.3 + i * 0.1 }}
+                className="text-center"
               >
-                <div className="absolute inset-0 bg-gold-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative text-center p-6 rounded-2xl border border-white/5 backdrop-blur-sm">
-                  <div className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-gold-400 to-gold-600 mb-2">
-                    <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <div className="text-sm text-white/40 uppercase tracking-[0.2em]">{stat.label}</div>
+                <div className="text-4xl md:text-5xl font-bold text-gold-500">
+                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
+                <div className="text-xs text-white/40 uppercase tracking-[0.2em] mt-2">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
-        </div>
+        </motion.div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
           <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
             className="flex flex-col items-center gap-2"
           >
-            <span className="text-xs text-white/30 uppercase tracking-[0.3em]">Scroll</span>
-            <div className="w-6 h-10 rounded-full border-2 border-gold-500/30 flex items-start justify-center pt-2">
-              <motion.div
-                animate={{ y: [0, 12, 0], opacity: [1, 0.3, 1] }}
-                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1.5 h-3 bg-gold-500/60 rounded-full"
-              />
-            </div>
+            <div className="w-px h-16 bg-gradient-to-b from-gold-500/50 to-transparent" />
           </motion.div>
         </motion.div>
-      </motion.section>
+      </section>
+
+      {/* Marquee Section */}
+      <section className="py-8 bg-black border-y border-white/5 overflow-hidden">
+        <MarqueeText text="NIGHTLIFE • CULTURE • MUSIC • VIBES • ENERGY" />
+      </section>
 
       {/* Features Section */}
-      <section ref={featuresRef} className="py-32 bg-black relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gold-500/5 rounded-full blur-[100px]" />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
+      <section ref={featuresRef} className="py-32 bg-black relative">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={featuresInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <Badge variant="outline" className="mb-6 border-gold-500/30 px-4 py-1.5">
-              <Star className="h-3 w-3 mr-2 text-gold-500" />
-              Why Choose Us
-            </Badge>
-            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 to-gold-600">Zanzi</span> Difference
+            <h2 className="text-5xl md:text-7xl font-serif font-bold text-white mb-6">
+              The <span className="text-gold-500">Experience</span>
             </h2>
-            <p className="text-white/50 max-w-2xl mx-auto text-xl">
-              More than a nightclub. An experience that celebrates music, culture, and community.
+            <p className="text-white/50 text-xl max-w-2xl mx-auto">
+              More than a nightclub. A celebration of music, culture, and community.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, i) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 40 }}
                 animate={featuresInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: i * 0.2 }}
               >
-                <motion.div
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <Card className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] border-white/10 backdrop-blur-xl hover:border-gold-500/30 transition-all duration-500 group h-full overflow-hidden">
-                    <CardContent className="p-10 text-center relative">
-                      {/* Glow effect on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-gold-500/0 to-gold-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                      <motion.div
-                        className="w-24 h-24 rounded-3xl bg-gradient-to-br from-gold-500/20 to-gold-600/10 flex items-center justify-center mx-auto mb-8 relative"
-                        whileHover={{ rotate: [0, -5, 5, 0] }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <div className="absolute inset-0 rounded-3xl bg-gold-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <feature.icon className="h-12 w-12 text-gold-500 relative z-10" />
-                      </motion.div>
-
-                      <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-gold-400 transition-colors">
-                        {feature.title}
-                      </h3>
-                      <p className="text-white/50 leading-relaxed text-lg">{feature.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                <Card className="bg-white/[0.03] border-white/10 hover:border-gold-500/30 transition-all duration-500 group h-full rounded-none">
+                  <CardContent className="p-10">
+                    <div className="w-16 h-16 border border-gold-500/30 flex items-center justify-center mb-6 group-hover:bg-gold-500/10 transition-colors">
+                      <feature.icon className="h-8 w-8 text-gold-500" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
+                    <p className="text-white/50">{feature.description}</p>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* VIP Section with Parallax */}
-      <section className="py-40 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black" />
-
-        {/* Decorative elements */}
+      {/* VIP Section */}
+      <section className="py-32 bg-black relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-gold-900/10 via-transparent to-gold-900/10" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
 
-        {/* Floating shapes */}
-        <motion.div
-          className="absolute top-20 left-10 w-20 h-20 border border-gold-500/20 rounded-full"
-          animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-10 w-32 h-32 border border-gold-500/10"
-          animate={{ y: [0, 20, 0], rotate: [0, -90, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -80 }}
+              initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, type: "spring" }}
+              transition={{ duration: 0.8 }}
             >
-              <Badge className="mb-8 bg-gold-500/10 text-gold-400 border-gold-500/30 px-4 py-1.5">
+              <Badge className="mb-6 bg-transparent text-gold-400 border-gold-500/30 rounded-none">
                 <Wine className="h-3 w-3 mr-2" />
-                VIP Experience
+                VIP EXPERIENCE
               </Badge>
-              <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-[1.1]">
-                Elevate Your Night with
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-gold-500 to-gold-400">
-                  Bottle Service
-                </span>
+              <h2 className="text-5xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight">
+                Bottle Service
+                <span className="block text-gold-500">Like No Other</span>
               </h2>
-              <p className="text-white/60 text-xl mb-10 leading-relaxed">
-                Reserve a private table, enjoy premium spirits, and receive VIP treatment all night long.
-                Our dedicated hosts ensure your experience is nothing short of exceptional.
+              <p className="text-white/60 text-lg mb-8 leading-relaxed">
+                Reserve a private table, enjoy premium spirits, and receive VIP treatment all night.
+                Your dedicated host ensures perfection.
               </p>
 
-              <div className="grid grid-cols-2 gap-6 mb-12">
-                {[
-                  { text: "Priority entry" },
-                  { text: "Dedicated VIP host" },
-                  { text: "Premium spirits" },
-                  { text: "Best seating" },
-                ].map((item, i) => (
-                  <motion.div
-                    key={item.text}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="flex items-center gap-4 text-white/80"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gold-500/30 to-gold-600/20 flex items-center justify-center">
-                      <ChevronRight className="h-4 w-4 text-gold-500" />
-                    </div>
-                    <span className="text-lg">{item.text}</span>
-                  </motion.div>
+              <div className="grid grid-cols-2 gap-4 mb-10">
+                {["Priority Entry", "Private Tables", "Premium Bottles", "VIP Hosts"].map((item) => (
+                  <div key={item} className="flex items-center gap-3 text-white/70">
+                    <div className="w-2 h-2 bg-gold-500" />
+                    {item}
+                  </div>
                 ))}
               </div>
 
-              <div className="flex flex-wrap gap-4">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    asChild
-                    size="lg"
-                    className="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-black font-bold px-8 rounded-full"
-                  >
-                    <Link href="/bottle-service">View Packages</Link>
-                  </Button>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="outline"
-                    className="border-gold-500/30 hover:bg-gold-500/10 px-8 rounded-full"
-                  >
-                    <Link href="/reservations">Reserve Now</Link>
-                  </Button>
-                </motion.div>
+              <div className="flex gap-4">
+                <Button asChild className="bg-gold-500 hover:bg-gold-600 text-black font-bold px-8 rounded-none">
+                  <Link href="/bottle-service">View Packages</Link>
+                </Button>
+                <Button asChild variant="outline" className="border-white/20 hover:bg-white/5 px-8 rounded-none">
+                  <Link href="/reservations">Reserve Now</Link>
+                </Button>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 80 }}
+              initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, type: "spring" }}
-              className="relative"
+              transition={{ duration: 0.8 }}
+              className="relative aspect-square"
             >
-              <div className="relative aspect-square">
-                {/* Decorative frame */}
-                <div className="absolute inset-8 border-2 border-gold-500/20 rounded-3xl" />
-                <div className="absolute inset-4 border border-gold-500/10 rounded-3xl" />
-
-                {/* Main content area */}
-                <div className="absolute inset-12 rounded-2xl overflow-hidden bg-gradient-to-br from-gold-900/40 to-black">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <motion.div
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 4, repeat: Infinity }}
-                      className="text-center"
-                    >
-                      <Image
-                        src="/logo.png"
-                        unoptimized
-                        alt="Zanzi VIP"
-                        width={180}
-                        height={180}
-                        className="mx-auto mb-6"
-                      />
-                      <p className="text-white/50 text-xl tracking-wider">Experience Excellence</p>
-                    </motion.div>
-                  </div>
+              <div className="absolute inset-0 border border-gold-500/20" />
+              <div className="absolute inset-4 border border-gold-500/10" />
+              <div className="absolute inset-8 bg-gradient-to-br from-gold-900/30 to-black flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-8xl font-serif font-bold text-gold-500 mb-2">VIP</div>
+                  <p className="text-white/40 tracking-[0.3em] uppercase text-sm">Experience Excellence</p>
                 </div>
-
-                {/* Animated corner accents */}
-                <motion.div
-                  className="absolute top-0 left-0 w-16 h-16 border-l-2 border-t-2 border-gold-500"
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <motion.div
-                  className="absolute top-0 right-0 w-16 h-16 border-r-2 border-t-2 border-gold-500"
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                />
-                <motion.div
-                  className="absolute bottom-0 left-0 w-16 h-16 border-l-2 border-b-2 border-gold-500"
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                />
-                <motion.div
-                  className="absolute bottom-0 right-0 w-16 h-16 border-r-2 border-b-2 border-gold-500"
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
-                />
               </div>
             </motion.div>
           </div>
@@ -719,117 +431,77 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-32 bg-black relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gold-500/5 rounded-full blur-[100px]" />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-32 bg-black">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <Badge variant="outline" className="mb-6 border-gold-500/30">
-              <Star className="h-3 w-3 mr-2 text-gold-500" />
-              Testimonials
-            </Badge>
-            <h2 className="font-serif text-5xl md:text-6xl font-bold text-white mb-4">
-              What Our Guests Say
+            <h2 className="text-5xl md:text-6xl font-serif font-bold text-white mb-4">
+              What They Say
             </h2>
           </motion.div>
 
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentTestimonial}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
-                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0, y: -20 }}
                 className="text-center"
               >
-                <Card className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] border-white/10 backdrop-blur-xl p-12 md:p-16">
-                  <div className="flex justify-center mb-8">
-                    {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: i * 0.1 }}
-                      >
-                        <Star className="h-7 w-7 text-gold-500 fill-gold-500 mx-1" />
-                      </motion.div>
-                    ))}
-                  </div>
-                  <p className="text-2xl md:text-3xl text-white/90 mb-10 italic leading-relaxed font-light">
-                    &ldquo;{testimonials[currentTestimonial].text}&rdquo;
-                  </p>
-                  <div>
-                    <p className="text-white font-semibold text-xl">{testimonials[currentTestimonial].name}</p>
-                    <p className="text-white/40">{testimonials[currentTestimonial].location}</p>
-                  </div>
-                </Card>
+                <div className="flex justify-center mb-6">
+                  {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-gold-500 fill-gold-500 mx-0.5" />
+                  ))}
+                </div>
+                <p className="text-2xl md:text-3xl text-white/90 mb-8 font-light italic">
+                  &ldquo;{testimonials[currentTestimonial].text}&rdquo;
+                </p>
+                <p className="text-gold-500 font-semibold">{testimonials[currentTestimonial].name}</p>
+                <p className="text-white/40 text-sm">{testimonials[currentTestimonial].location}</p>
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex justify-center gap-6 mt-10">
-              <Button
-                variant="outline"
-                size="icon"
-                className="border-gold-500/30 hover:bg-gold-500/10 w-12 h-12 rounded-full"
-                onClick={() => setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <div className="flex items-center gap-3">
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      i === currentTestimonial ? "bg-gold-500 w-8" : "bg-white/20 w-2 hover:bg-white/40"
-                    }`}
-                    onClick={() => setCurrentTestimonial(i)}
-                  />
-                ))}
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                className="border-gold-500/30 hover:bg-gold-500/10 w-12 h-12 rounded-full"
-                onClick={() => setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))}
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
+            <div className="flex justify-center gap-3 mt-10">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  className={`w-2 h-2 transition-all ${
+                    i === currentTestimonial ? "bg-gold-500 w-8" : "bg-white/20"
+                  }`}
+                  onClick={() => setCurrentTestimonial(i)}
+                />
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Location & Hours */}
-      <section className="py-32 bg-black">
+      {/* Location & Info */}
+      <section className="py-32 bg-black border-t border-white/5">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <Card className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] border-white/10 backdrop-blur-xl p-8 h-full hover:border-gold-500/30 transition-colors">
-                <div className="flex items-start gap-4 mb-8">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-500/30 to-gold-600/20 flex items-center justify-center">
-                    <MapPin className="h-7 w-7 text-gold-500" />
-                  </div>
+              <Card className="bg-white/[0.02] border-white/10 rounded-none p-8">
+                <div className="flex items-start gap-4 mb-6">
+                  <MapPin className="h-6 w-6 text-gold-500 mt-1" />
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Location</h3>
-                    <p className="text-white/50 text-lg">
+                    <h3 className="text-xl font-bold text-white mb-2">Location</h3>
+                    <p className="text-white/50">
                       19 Grand Avenue<br />
                       Oakland, CA 94612
                     </p>
                   </div>
                 </div>
-                <div className="aspect-video rounded-2xl overflow-hidden bg-white/5 border border-white/10">
+                <div className="aspect-video bg-white/5 border border-white/10">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0977456894867!2d-122.27085!3d37.80483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ4JzE3LjQiTiAxMjLCsDE2JzE1LjEiVw!5e0!3m2!1sen!2sus!4v1234567890"
                     width="100%"
@@ -837,7 +509,7 @@ export default function HomePage() {
                     style={{ border: 0 }}
                     allowFullScreen
                     loading="lazy"
-                    className="grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+                    className="grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
                   />
                 </div>
               </Card>
@@ -849,133 +521,95 @@ export default function HomePage() {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <Card className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] border-white/10 backdrop-blur-xl p-8 h-full hover:border-gold-500/30 transition-colors">
+              <Card className="bg-white/[0.02] border-white/10 rounded-none p-8 h-full">
                 <div className="flex items-start gap-4 mb-8">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-500/30 to-gold-600/20 flex items-center justify-center">
-                    <Clock className="h-7 w-7 text-gold-500" />
-                  </div>
+                  <Clock className="h-6 w-6 text-gold-500 mt-1" />
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Hours</h3>
-                    <p className="text-white/50 text-lg">
-                      Friday: 9:00 PM - 2:00 AM<br />
-                      Saturday: 10:00 PM - 3:00 AM
+                    <h3 className="text-xl font-bold text-white mb-2">Hours</h3>
+                    <p className="text-white/50">
+                      Friday: 9PM - 2AM<br />
+                      Saturday: 10PM - 3AM
                     </p>
                   </div>
                 </div>
-                <div className="space-y-6 mt-6">
-                  <div className="flex items-center gap-4 text-white/60 text-lg">
-                    <div className="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center">
-                      <Users className="h-5 w-5 text-gold-500" />
-                    </div>
-                    <span>21+ with valid ID</span>
+
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-white/50">
+                    <Users className="h-5 w-5 text-gold-500" />
+                    21+ with valid ID
                   </div>
-                  <div className="flex items-center gap-4 text-white/60 text-lg">
-                    <div className="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center">
-                      <Wine className="h-5 w-5 text-gold-500" />
-                    </div>
-                    <span>Dress code: Upscale casual</span>
+                  <div className="flex items-center gap-3 text-white/50">
+                    <Wine className="h-5 w-5 text-gold-500" />
+                    Dress code: Upscale casual
                   </div>
                 </div>
-                <div className="mt-10">
-                  <Button
-                    asChild
-                    className="w-full bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-black font-bold py-6 text-lg rounded-xl"
-                  >
-                    <Link href="/contact">
-                      Contact Us
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
-                  </Button>
-                </div>
+
+                <Button asChild className="w-full mt-8 bg-gold-500 hover:bg-gold-600 text-black font-bold rounded-none">
+                  <Link href="/contact">
+                    Contact Us
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
               </Card>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Newsletter CTA */}
-      <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gold-900/10 to-black" />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent" />
-
-        <ParticlesBackground density={20} />
-
-        <div className="container mx-auto px-4 relative z-10">
+      {/* Newsletter */}
+      <section className="py-24 bg-gradient-to-b from-black to-gold-900/10 border-t border-white/5">
+        <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center"
+            className="max-w-xl mx-auto"
           >
-            <Badge variant="outline" className="mb-8 border-gold-500/30 px-4 py-1.5">
-              <Sparkles className="h-3 w-3 mr-2 text-gold-500" />
-              Stay Connected
-            </Badge>
-            <h2 className="font-serif text-5xl md:text-6xl font-bold text-white mb-6">
-              Join the VIP List
-            </h2>
-            <p className="text-white/50 text-xl mb-10">
-              Get exclusive access to event announcements, VIP offers, and special promotions.
-            </p>
-            <form className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+            <h2 className="text-4xl font-serif font-bold text-white mb-4">Join the List</h2>
+            <p className="text-white/50 mb-8">Get exclusive access to events and VIP offers.</p>
+            <form className="flex flex-col sm:flex-row gap-3">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 h-16 px-8 rounded-full border-2 border-gold-500/30 bg-white/5 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent backdrop-blur-xl text-lg"
+                className="flex-1 h-14 px-6 bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-gold-500"
               />
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="h-16 px-10 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-black font-bold rounded-full text-lg"
-                >
-                  Subscribe
-                </Button>
-              </motion.div>
+              <Button type="submit" className="h-14 px-8 bg-gold-500 hover:bg-gold-600 text-black font-bold rounded-none">
+                Subscribe
+              </Button>
             </form>
           </motion.div>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="py-40 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black" />
-        <ParticlesBackground density={50} />
+      <section className="py-40 bg-black relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold-500/5 rounded-full blur-[150px]" />
+        </div>
 
-        {/* Large glowing orb */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold-500/10 rounded-full blur-[150px]" />
-
-        <div className="container mx-auto px-4 relative z-10 text-center">
+        <div className="container mx-auto px-4 text-center relative z-10">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
           >
-            <h2 className="font-serif text-6xl md:text-8xl lg:text-9xl font-bold text-white mb-8 leading-[0.9]">
-              Ready to Experience
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300">
-                Zanzi?
-              </span>
+            <h2 className="text-6xl md:text-8xl font-serif font-bold text-white mb-8">
+              Your Table
+              <span className="block text-gold-500">Awaits</span>
             </h2>
-            <p className="text-white/50 text-2xl mb-14 max-w-2xl mx-auto">
-              Book your table now and secure your spot for an unforgettable night.
+            <p className="text-white/50 text-xl mb-12 max-w-lg mx-auto">
+              Book now and experience Oakland&apos;s finest nightlife destination.
             </p>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <Button
+              asChild
+              size="lg"
+              className="bg-gold-500 hover:bg-gold-600 text-black font-black px-16 py-8 text-xl rounded-none"
             >
-              <Button
-                asChild
-                size="xl"
-                className="bg-gradient-to-r from-gold-500 via-gold-400 to-gold-500 bg-[length:200%_auto] hover:bg-right text-black font-black px-16 py-8 text-xl rounded-full shadow-2xl shadow-gold-500/30 transition-all duration-500"
-              >
-                <Link href="/reservations">
-                  Reserve Your Table
-                  <ArrowRight className="ml-3 h-6 w-6" />
-                </Link>
-              </Button>
-            </motion.div>
+              <Link href="/reservations">
+                RESERVE NOW
+                <ArrowRight className="ml-3 h-6 w-6" />
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </section>
