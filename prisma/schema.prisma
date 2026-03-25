@@ -1,0 +1,356 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Staff/Admin Users
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  role          Role      @default(STAFF)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+// Sections of the club
+model Section {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  color       String?  // For floor plan visualization
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  tables      Table[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("sections")
+}
+
+// Tables in the club
+model Table {
+  id              String        @id @default(cuid())
+  name            String
+  section         Section       @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId       String
+  capacity        Int
+  minimumSpend    Decimal?      @db.Decimal(10, 2)
+  depositRequired Decimal?      @db.Decimal(10, 2)
+  requiresBottle  Boolean       @default(false)
+  position        Json          // {x, y, width, height, rotation} for floor plan
+  shape           TableShape    @default(CIRCLE)
+  isActive        Boolean       @default(true)
+  reservations    Reservation[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([name, sectionId])
+  @@map("tables")
+}
+
+enum TableShape {
+  CIRCLE
+  RECTANGLE
+  SQUARE
+  BOOTH
+}
+
+// Reservations
+model Reservation {
+  id              String              @id @default(cuid())
+  table           Table               @relation(fields: [tableId], references: [id])
+  tableId         String
+  event           Event?              @relation(fields: [eventId], references: [id])
+  eventId         String?
+  date            DateTime
+  timeSlot        String?             // e.g., "21:00-02:00"
+  guestName       String
+  guestEmail      String
+  guestPhone      String
+  partySize       Int
+  status          ReservationStatus   @default(PENDING)
+  specialRequests String?
+  occasion        String?             // Birthday, Anniversary, etc.
+  depositAmount   Decimal?            @db.Decimal(10, 2)
+  depositPaid     Boolean             @default(false)
+  paymentId       String?             // Square/Stripe payment ID
+  paymentProvider String?             // "square" or "stripe"
+  bottles         ReservationBottle[]
+  notes           String?             // Staff notes
+  arrivedAt       DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([date])
+  @@index([status])
+  @@index([guestEmail])
+  @@map("reservations")
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+// Bottle Categories
+model BottleCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  order       Int      @default(0)
+  bottles     Bottle[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("bottle_categories")
+}
+
+// Bottle Menu
+model Bottle {
+  id           String              @id @default(cuid())
+  name         String
+  category     BottleCategory      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId   String
+  description  String?
+  size         String?             // e.g., "750ml", "1L"
+  price        Decimal             @db.Decimal(10, 2)
+  image        String?
+  isAvailable  Boolean             @default(true)
+  isFeatured   Boolean             @default(false)
+  reservations ReservationBottle[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@map("bottles")
+}
+
+// Junction table for reservation bottles
+model ReservationBottle {
+  id            String      @id @default(cuid())
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  reservationId String
+  bottle        Bottle      @relation(fields: [bottleId], references: [id])
+  bottleId      String
+  quantity      Int         @default(1)
+  priceAtTime   Decimal     @db.Decimal(10, 2)
+  createdAt     DateTime    @default(now())
+
+  @@unique([reservationId, bottleId])
+  @@map("reservation_bottles")
+}
+
+// Events
+model Event {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  description   String        @db.Text
+  shortDesc     String?       // Brief description for cards
+  date          DateTime
+  endDate       DateTime?
+  doors         String?       // e.g., "9:00 PM"
+  poster        String?
+  posterBlur    String?       // Blur hash for loading
+  isTicketed    Boolean       @default(false)
+  ticketPrice   Decimal?      @db.Decimal(10, 2)
+  ticketLimit   Int?
+  ticketsSold   Int           @default(0)
+  isFeatured    Boolean       @default(false)
+  isPublished   Boolean       @default(false)
+  dressCode     String?
+  ageLimit      Int           @default(21)
+  artists       String[]      // Array of artist/DJ names
+  genre         String?
+  reservations  Reservation[]
+  tickets       Ticket[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([date])
+  @@index([isPublished])
+  @@map("events")
+}
+
+// Tickets
+model Ticket {
+  id          String       @id @default(cuid())
+  event       Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId     String
+  buyerName   String
+  buyerEmail  String
+  buyerPhone  String?
+  quantity    Int
+  ticketType  String       @default("General Admission")
+  unitPrice   Decimal      @db.Decimal(10, 2)
+  totalPrice  Decimal      @db.Decimal(10, 2)
+  paymentId   String
+  paymentProvider String   // "square" or "stripe"
+  status      TicketStatus @default(VALID)
+  qrCode      String?      @unique
+  usedAt      DateTime?
+  createdAt   DateTime     @default(now())
+
+  @@index([eventId])
+  @@index([buyerEmail])
+  @@index([qrCode])
+  @@map("tickets")
+}
+
+enum TicketStatus {
+  VALID
+  USED
+  CANCELLED
+  REFUNDED
+}
+
+// Email Subscriptions
+model Subscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  source      String?  // Where they signed up
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("subscribers")
+}
+
+// Gallery Images
+model GalleryImage {
+  id          String   @id @default(cuid())
+  url         String
+  thumbnail   String?
+  blurHash    String?
+  caption     String?
+  eventId     String?
+  eventTitle  String?
+  category    String?  // "nights", "events", "vip", "venue"
+  tags        String[]
+  width       Int?
+  height      Int?
+  order       Int      @default(0)
+  isPublished Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([isPublished])
+  @@map("gallery_images")
+}
+
+// Menu Categories (food/drinks)
+model MenuCategory {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  type        MenuType   @default(FOOD)
+  order       Int        @default(0)
+  isActive    Boolean    @default(true)
+  items       MenuItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("menu_categories")
+}
+
+enum MenuType {
+  FOOD
+  DRINK
+  HOOKAH
+  OTHER
+}
+
+// Menu Items
+model MenuItem {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal      @db.Decimal(10, 2)
+  category    MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  String
+  image       String?
+  isAvailable Boolean      @default(true)
+  isPopular   Boolean      @default(false)
+  allergens   String[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("menu_items")
+}
+
+// Site Settings (key-value store) - Admin only
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  isSecret  Boolean  @default(false) // For API keys etc
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+// Site Content - Editable page content (Admin only)
+model SiteContent {
+  id          String   @id @default(cuid())
+  page        String   // "home", "about", "contact", etc.
+  section     String   // "hero", "features", "cta", etc.
+  key         String   // "title", "subtitle", "image", etc.
+  value       String   @db.Text
+  type        ContentType @default(TEXT)
+  order       Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([page, section, key])
+  @@index([page])
+  @@map("site_content")
+}
+
+enum ContentType {
+  TEXT
+  RICHTEXT
+  IMAGE
+  VIDEO
+  LINK
+  NUMBER
+  JSON
+}
+
+// Bottle Service Packages
+model BottlePackage {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  price           Decimal  @db.Decimal(10, 2)
+  includes        Json     // Array of {bottleId, quantity}
+  image           String?
+  isAvailable     Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  savings         Decimal? @db.Decimal(10, 2) // How much they save vs individual
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("bottle_packages")
+}
